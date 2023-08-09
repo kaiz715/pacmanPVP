@@ -36,7 +36,6 @@ def redrawWindow(screen, world, player_num):
     #draw sprites
     world.draw(screen)
 
-
     player = world.player_group.sprites()[player_num]
     #draw HUD
     draw_text('Player ' + str(player_num+1) + "   Score: " + str(player.score), bauhaus, WHITE, tile_size, 10)
@@ -62,20 +61,13 @@ def main():
     #local_player_group.add(player)
 
     while run:
-        #print("1")
-        # data = network.send(pickle.dumps(('Player', player.send())))
-        # #print("2")
-        # world.load(data)
-        #print("2.25")
-        clock.tick(frame_rate)
+        clock.tick(frame_rate) #update clock
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
-
-        keys = pygame.key.get_pressed()
-                
+        keys = pygame.key.get_pressed() #get input
         pressed = -1
         if keys[pygame.K_LEFT]:
             pressed = 1
@@ -85,22 +77,10 @@ def main():
             pressed = 3
         elif keys[pygame.K_DOWN]:
             pressed = 4
-        #print("2.5")
-        print(pressed)
-        data = network.send(pressed)
-        world.load(data)
-        #print("3")
 
-        # directions = []
-        # for i in range(len(world.player_group.sprites())): #need to format it in an array so that player.update() can work
-        #     if i == player.number:
-        #         directions.append(pressed)
-        #     else:
-        #         directions.append(-1) #placeholder
-        #player.update(world_data, directions)
-        #print("4")
+        data = network.send(pressed) #get updated world from server
+        world.load(data)
 
         redrawWindow(screen, world, player_number)
-        #print("5")
 
 main()

@@ -18,7 +18,7 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-currentPlayer = 0
+current_player = 0
 
 #game variables
 width = 1000
@@ -31,8 +31,6 @@ bauhaus = pygame.font.SysFont('Bauhaus 93', 30)
 bauhaus_big = pygame.font.SysFont('Bauhaus 93', 150)
 WHITE = (255,255,255)
 
-clientNumber = 0
-
 tile_size = 50
 frame_rate = 45
 
@@ -42,7 +40,7 @@ RIGHT = 2
 UP = 3
 DOWN = 4
 
-#create the game
+#create the game and players
 players = [Player(50,50, 0), Player(50,900, 1), Player(900,50, 2), Player(900,900, 3)]
 player_moves = [-1, -1, -1, -1]
 world = World(world_data)
@@ -71,21 +69,22 @@ def threaded_client(conn, player_num):
         except Exception as e: 
             print(e)
 
-
 def check_for_connection():
-    global currentPlayer
+    global current_player
     while True:
         conn, addr = s.accept()
         print("Connected to:", addr)
 
-        start_new_thread(threaded_client, (conn, currentPlayer))
-        currentPlayer += 1
+        start_new_thread(threaded_client, (conn, current_player))
+        current_player += 1
 
 def main():
     start_new_thread(check_for_connection, ())
 
     run = True
     clock = pygame.time.Clock()
+    world.draw(screen)
+    pygame.display.update()
 
     while run:
         clock.tick(frame_rate)
@@ -95,9 +94,10 @@ def main():
                 pygame.quit()
 
         #update world
-        world.update(player_moves)
+        if current_player == 3: #only update if all players have loaded in
+            world.update(player_moves)
 
-        #draw screen
+        #draw screen. only use for debug purposes
         screen.fill((0, 0, 0))
         world.draw(screen)
         pygame.display.update()

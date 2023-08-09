@@ -64,6 +64,9 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def update(self, world_data, directions):
+        if self.lost:
+            return
+
         dx = 0
         dy = 0
         turned = False  # assume turned unless no turn

@@ -31,8 +31,8 @@ world_data = [
     [1, 2, 2, 2, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 1],
     [1, 2, 1, 1, 1, 2, 1, 3, 2, 2, 2, 2, 3, 1, 2, 1, 1, 1, 2, 1],
     [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-    [1, 3, 1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 2, 1, 2, 2, 2, 1, 3, 1],
-    [1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+    [1, 3, 1, 2, 2, 2, 1, 2, 1, 4, 4, 1, 2, 1, 2, 2, 2, 1, 3, 1],
+    [1, 2, 1, 2, 1, 2, 1, 2, 1, 4, 4, 1, 2, 1, 2, 1, 2, 1, 2, 1],
     [1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
     [1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1],
     [1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1],
@@ -51,6 +51,7 @@ class World:
         self.wall_group = pygame.sprite.Group()
         self.ghost_group = pygame.sprite.Group()
         self.player_group = pygame.sprite.Group()
+
         # populating groups based on world data
         for y in range(len(world_data)):  # each row
             for x in range(len(world_data[y])):  # each col
@@ -73,20 +74,8 @@ class World:
                     ghost = Ghost(x * tile_size, y * tile_size)
                     self.ghost_group.add(ghost)
 
-    # def update_world(self, player, player_num, coin_group, fruit_group):
-    #     self.coin_group = coin_group
-    #     self.fruit_group = fruit_group
-
-    #     new_player_group = pygame.sprite.Group()
-    #     for i in range(4):
-    #         if i == player_num:
-    #             new_player_group.add(player)
-    #         else:
-    #             new_player_group.add(self.player_group.sprites()[i])
-    #     self.player_group = new_player_group
-
     def export(self):
-        data = [[],[],[],[]] #coin, fruit, ghost, player
+        data = [[],[],[],[]] #[coin[], fruit[], ghost[], player[]]
         for coin in self.coin_group.sprites():
             data[0].append((coin.x, coin.y))
         for fruit in self.fruit_group.sprites():
@@ -101,20 +90,12 @@ class World:
         
 
     def load(self, data):
-        #print("1.1")
-        new_coin_group = pygame.sprite.Group()
-
         coins = self.coin_group.sprites()
         for i in range(max(len(coins), len(data[0]))):
             if i >= len(data[0]):
                 coins[i].kill()
             else:
                 coins[i].load(data[0][i])
-
-        # for coin_data in data[0]:
-        #     coin = Coin(coin_data[0], coin_data[1])
-        #     new_coin_group.add(coin)
-        #print("1.2")
 
         fruits = self.fruit_group.sprites()
         for i in range(max(len(fruits), len(data[1]))):
@@ -123,12 +104,6 @@ class World:
             else:
                 fruits[i].load(data[1][i])
 
-        # new_fruit_group = pygame.sprite.Group()
-        # for fruit_data in data[1]:
-        #     fruit = Fruit(fruit_data[0],fruit_data[1])
-        #     new_fruit_group.add(fruit)
-        #print("1.3")
-
         ghosts = self.ghost_group.sprites()
         for i in range(max(len(ghosts), len(data[2]))):
             if i >= len(data[2]):
@@ -136,33 +111,12 @@ class World:
             else:
                 ghosts[i].load(data[2][i])
 
-        # new_ghost_group = pygame.sprite.Group()
-        # for ghost_data in data[2]:
-        #     ghost = Ghost(ghost_data[0],ghost_data[1])
-        #     new_ghost_group.add(ghost)
-
         players = self.player_group.sprites()
-        #print(data[3])
         for i in range(max(len(players), len(data[3]))):
             if i >= len(players):
                 self.player_group.add(Player(data[3][i][0],data[3][i][1], i))
             else:
                 players[i].load(data[3][i])
-
-        
-        # new_player_group = pygame.sprite.Group()
-        # for player_data in data[3]:
-        #     player = Player(player_data[0], player_data[1], player_data[2])
-        #     player.invincibility_time = player_data[3]
-        #     player.score = player_data[4]
-        #     player.lost = player_data[5]
-        #     new_player_group.add(player)
-
-        #self.coin_group = new_coin_group
-        # self.fruit_group = new_fruit_group
-        # self.ghost_group = new_ghost_group
-        # self.player_group = new_player_group
-        #print("1.4")
         
         
     def update(self, directions):
@@ -179,8 +133,6 @@ class World:
                     pygame.sprite.spritecollide(player, self.ghost_group, True)
                     player.score += 100
                 else:
-                    player.rect = pygame.Rect(0,0,0,0)
-                    player.image = None
                     player.lost = True
 
         #calculate and update locations
@@ -189,13 +141,13 @@ class World:
 
 
     def draw(self, screen, player_num = -1):
+        #draw each sprite group
         self.wall_group.draw(screen)
         self.coin_group.draw(screen)
         self.fruit_group.draw(screen)
-
         self.ghost_group.draw(screen)
 
-        group = pygame.sprite.Group() #remove dead players
+        group = pygame.sprite.Group() #dont display dead players
         for player in self.player_group.sprites():
             if player.number != player_num and not player.lost:
                 group.add(player)
