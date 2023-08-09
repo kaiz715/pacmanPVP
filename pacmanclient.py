@@ -1,6 +1,7 @@
-import pygame
+import pygame, pickle
 from world import World, world_data
 from player import Player
+from network import Network
 
 width = 1000
 height = 1000
@@ -29,15 +30,16 @@ def draw_text(text, font, color, x, y):
     img = font.render(text, True, color)
     screen.blit(img, (x,y))
 
-def redrawWindow(screen, world, player, local_player_group):
+def redrawWindow(screen, world, player_num):
     screen.fill((0, 0, 0))
 
-    local_player_group.draw(screen)
     #draw sprites
     world.draw(screen)
 
+
+    player = world.player_group.sprites()[player_num]
     #draw HUD
-    draw_text('Score: ' + str(player.score), bauhaus, WHITE, tile_size, 10)
+    draw_text('Player ' + str(player_num+1) + "   Score: " + str(player.score), bauhaus, WHITE, tile_size, 10)
 
     if player.invincibility_time>0:
         draw_text("INVINCIBILITY ON", bauhaus, WHITE, 715, 10)
@@ -50,34 +52,55 @@ def main():
     run = True
     clock = pygame.time.Clock()
 
+    network = Network()
+
     world = World(world_data)
-    player = Player(50,50)
-    local_player_group = pygame.sprite.Group()
-    local_player_group.add(player)
+    player_data = network.getPlayer()
+    # player = Player(player_data[0], player_data[1], player_data[2])
+    # local_player_group = pygame.sprite.Group()
+    player_number = player_data[2]
+    #local_player_group.add(player)
 
     while run:
+        #print("1")
+        # data = network.send(pickle.dumps(('Player', player.send())))
+        # #print("2")
+        # world.load(data)
+        #print("2.25")
         clock.tick(frame_rate)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
-        player.update(world_data)
 
-        #check collisons
-        if pygame.sprite.spritecollide(player, world.coin_group, True):
-            player.score += 10
-    
-        if pygame.sprite.spritecollide(player, world.fruit_group, True):
-            player.invincibility_time += 8
+        keys = pygame.key.get_pressed()
+                
+        pressed = -1
+        if keys[pygame.K_LEFT]:
+            pressed = 1
+        elif keys[pygame.K_RIGHT]:
+            pressed = 2
+        elif keys[pygame.K_UP]:
+            pressed = 3
+        elif keys[pygame.K_DOWN]:
+            pressed = 4
+        #print("2.5")
+        print(pressed)
+        data = network.send(pressed)
+        world.load(data)
+        #print("3")
 
-        if pygame.sprite.spritecollide(player, world.ghost_group, False):
-            if player.invincibility_time > 0:
-                pygame.sprite.spritecollide(player, world.ghost_group, True)
-            else:
-                player.kill()
-                player.lost = True
+        # directions = []
+        # for i in range(len(world.player_group.sprites())): #need to format it in an array so that player.update() can work
+        #     if i == player.number:
+        #         directions.append(pressed)
+        #     else:
+        #         directions.append(-1) #placeholder
+        #player.update(world_data, directions)
+        #print("4")
 
-        redrawWindow(screen, world, player, local_player_group)
+        redrawWindow(screen, world, player_number)
+        #print("5")
 
 main()

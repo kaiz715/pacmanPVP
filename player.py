@@ -14,8 +14,9 @@ DOWN = 4
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, number, direction = -1):
         pygame.sprite.Sprite.__init__(self)
+        self.number = number
         img = pygame.image.load("images/pacmanyellow.png")
         self.image = pygame.transform.scale(img, (tile_size, tile_size))
 
@@ -36,34 +37,60 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.lost = False
 
+    def load(self, player_data): # player_data = [x, y, direction, invincibility_time, score, lost]
+        self.rect.x = player_data[0]
+        self.rect.y = player_data[1]
+        self.direction = player_data[2]
+        self.invincibility_time = player_data[3]
+        self.score = player_data[4]
+        self.lost = player_data[5]
+
+        if self.direction == LEFT:
+            self.image = self.left
+        elif self.direction == RIGHT:
+            self.image = self.right
+        elif self.direction == UP:
+            self.image = self.up
+        elif self.direction == DOWN:
+            self.image = self.down
+
+        if self.lost:
+            self.image = None
+    
+    def send(self):
+        return (self.rect.x, self.rect.y, self.direction, self.invincibility_time, self.score, self.lost)
+
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def update(self, world_data):
+    def update(self, world_data, directions):
         dx = 0
         dy = 0
         turned = False  # assume turned unless no turn
-        keys = pygame.key.get_pressed()
-
+        #print(directions)
+        pressed = directions[self.number]
+        # if pressed == -1: #if we dont get any response from client
+        #     pressed = self.direction
+        
         if (self.rect.x / 50).is_integer() and (self.rect.y / 50).is_integer(): #check if position is directly in a tile
             prev_direction = self.direction
             prev_image = self.image
-            if keys[pygame.K_LEFT] and self.direction != RIGHT:
+            if pressed == LEFT and self.direction != RIGHT:
                 dx = -self.vel
                 self.direction = LEFT
                 self.image = self.left
                 turned = True
-            elif keys[pygame.K_RIGHT] and self.direction != LEFT:
+            elif pressed == RIGHT and self.direction != LEFT:
                 dx = self.vel
                 self.direction = RIGHT
                 self.image = self.right
                 turned = True
-            elif keys[pygame.K_UP] and self.direction != DOWN:
+            elif pressed == UP and self.direction != DOWN:
                 dy = -self.vel
                 self.direction = UP
                 self.image = self.up
                 turned = True
-            elif keys[pygame.K_DOWN] and self.direction != UP:
+            elif pressed == DOWN and self.direction != UP:
                 dy = self.vel
                 self.direction = DOWN
                 self.image = self.down

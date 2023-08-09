@@ -32,6 +32,13 @@ class Ghost(pygame.sprite.Sprite):
             self.turn_direction = random.randint(1,2)
         self.delay = 35
 
+    def load(self, ghost_data): # ghost_data = [x,y]
+        self.rect.x = ghost_data[0]
+        self.rect.y = ghost_data[1]
+    
+    def send(self):
+        return [self.rect, self.direction, self.turn_direction]
+
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
