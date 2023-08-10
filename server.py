@@ -20,25 +20,25 @@ print("Waiting for a connection, Server Started")
 
 current_player = 0
 
-#game variables
+#game variables and constants
 width = 1000
 height = 1000
+tile_size = 50
+frame_rate = 45
+
+WHITE = (255,255,255)
+STOPPED = 0
+LEFT = 1
+RIGHT = 2
+UP = 3
+DOWN = 4
+
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pacman Game")
 
 pygame.init()
 bauhaus = pygame.font.SysFont('Bauhaus 93', 30)
 bauhaus_big = pygame.font.SysFont('Bauhaus 93', 150)
-WHITE = (255,255,255)
-
-tile_size = 50
-frame_rate = 45
-
-STOPPED = 0
-LEFT = 1
-RIGHT = 2
-UP = 3
-DOWN = 4
 
 #create the game and players
 players = [Player(50,50, 0), Player(50,900, 1), Player(900,50, 2), Player(900,900, 3)]
@@ -62,8 +62,6 @@ def threaded_client(conn, player_num):
                 player_moves[player_num] = data
                 reply = world.export()
 
-
-            #print(reply)
             conn.send(pickle.dumps(reply))
 
         except Exception as e: 
@@ -85,6 +83,7 @@ def main():
     clock = pygame.time.Clock()
     world.draw(screen)
     pygame.display.update()
+    delay = 200
 
     while run:
         clock.tick(frame_rate)
@@ -94,8 +93,10 @@ def main():
                 pygame.quit()
 
         #update world
-        if current_player == 3: #only update if all players have loaded in
-            world.update(player_moves)
+        if current_player == 4: #only update if all players have loaded in
+            delay -=1
+            if delay < 0:
+                world.update(player_moves)
 
         #draw screen. only use for debug purposes
         screen.fill((0, 0, 0))

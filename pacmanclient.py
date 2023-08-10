@@ -11,6 +11,7 @@ pygame.display.set_caption("Pacman Game")
 pygame.init()
 bauhaus = pygame.font.SysFont('Bauhaus 93', 30)
 bauhaus_big = pygame.font.SysFont('Bauhaus 93', 150)
+bauhaus_medium = pygame.font.SysFont('Bauhaus 93', 120)
 WHITE = (255,255,255)
 
 clientNumber = 0
@@ -43,8 +44,10 @@ def redrawWindow(screen, world, player_num):
     if player.invincibility_time>0:
         draw_text("INVINCIBILITY ON", bauhaus, WHITE, 715, 10)
 
-    if player.lost:
-        draw_text('GAME OVER', bauhaus_big, WHITE, 115, 400)
+    if world.winner:
+        draw_text('WINNER: PLAYER ' + str(world.winner+1), bauhaus_medium, WHITE, 50, 400)
+    elif player.dead:
+        draw_text('YOU DIED', bauhaus_big, WHITE, 150, 400)
     pygame.display.update()
 
 def main():
@@ -55,10 +58,7 @@ def main():
 
     world = World(world_data)
     player_data = network.getPlayer()
-    # player = Player(player_data[0], player_data[1], player_data[2])
-    # local_player_group = pygame.sprite.Group()
     player_number = player_data[2]
-    #local_player_group.add(player)
 
     while run:
         clock.tick(frame_rate) #update clock
@@ -82,5 +82,6 @@ def main():
         world.load(data)
 
         redrawWindow(screen, world, player_number)
+
 
 main()

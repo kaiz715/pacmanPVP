@@ -73,14 +73,14 @@ class Ghost(pygame.sprite.Sprite):
             if turned:
                 self.delay = random.randint(1,35)
 
-            #check if turn would collide
+            #check if turn would collide with wall
             if (
                 world_data[self.rect.y // 50][math.ceil((self.rect.x + dx) / 50)] == 1
                 or world_data[self.rect.y // 50][math.floor((self.rect.x + dx) / 50)] == 1
                 or world_data[math.ceil((self.rect.y + dy) / 50)][self.rect.x // 50] == 1
                 or world_data[math.floor((self.rect.y + dy) / 50)][self.rect.x // 50] == 1
             ):
-                dx = 0
+                dx = 0 
                 dy = 0
                 turned = False
                 self.direction = prev_direction
@@ -116,15 +116,15 @@ class Ghost(pygame.sprite.Sprite):
                     temp_dir = (RIGHT if dx == 5 else LEFT)
 
             if turned:
-                self.direction = temp_dir
-                if self.direction == LEFT or self.direction == RIGHT:
+                self.direction = temp_dir 
+                if self.direction == LEFT or self.direction == RIGHT: #sets up next turn direction
                     self.turn_direction = random.randint(UP,DOWN)
                 elif self.direction == UP or self.direction == DOWN:
                     self.turn_direction = random.randint(LEFT,RIGHT)
                 self.delay = random.randint(1,35)
             
-                
         if self.delay > 0:
             self.delay-=1
-        self.rect.x += dx
+
+        self.rect.x += dx #update positions
         self.rect.y += dy

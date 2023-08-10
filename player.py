@@ -35,15 +35,15 @@ class Player(pygame.sprite.Sprite):
         self.direction = STOPPED
         self.invincibility_time = 0
         self.score = 0
-        self.lost = False
+        self.dead = False
 
-    def load(self, player_data): # player_data = [x, y, direction, invincibility_time, score, lost]
+    def load(self, player_data): # player_data = [x, y, direction, invincibility_time, score, dead]
         self.rect.x = player_data[0]
         self.rect.y = player_data[1]
         self.direction = player_data[2]
         self.invincibility_time = player_data[3]
         self.score = player_data[4]
-        self.lost = player_data[5]
+        self.dead = player_data[5]
 
         if self.direction == LEFT:
             self.image = self.left
@@ -54,17 +54,17 @@ class Player(pygame.sprite.Sprite):
         elif self.direction == DOWN:
             self.image = self.down
 
-        if self.lost:
+        if self.dead:
             self.image = None
     
     def send(self):
-        return (self.rect.x, self.rect.y, self.direction, self.invincibility_time, self.score, self.lost)
+        return (self.rect.x, self.rect.y, self.direction, self.invincibility_time, self.score, self.dead)
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def update(self, world_data, directions):
-        if self.lost:
+        if self.dead:
             return
 
         dx = 0

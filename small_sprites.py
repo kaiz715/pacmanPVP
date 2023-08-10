@@ -1,5 +1,6 @@
 import pygame
 
+
 class Coin(pygame.sprite.Sprite):
     def __init__(self, x, y):  # x and y are center
         pygame.sprite.Sprite.__init__(self)
@@ -25,7 +26,6 @@ class Fruit(pygame.sprite.Sprite):
 
     def load(self, data):
         self.rect.center = (data[0], data[1])
-
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, x, y):
