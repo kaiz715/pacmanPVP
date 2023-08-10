@@ -290,8 +290,7 @@ class World:
         self.wall_group = pygame.sprite.Group()
         self.ghost_group = pygame.sprite.Group()
         self.player_group = pygame.sprite.Group()
-        # self.player = Player(50, 50)
-        # populating groups based on world data
+        
         for y in range(len(data)):  # each row
             for x in range(len(data[y])):  # each col
                 if data[y][x] == 1:
