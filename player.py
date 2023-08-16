@@ -14,7 +14,7 @@ DOWN = 4
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, number, direction = -1):
+    def __init__(self, x, y, number):
         pygame.sprite.Sprite.__init__(self)
         self.number = number
         img = pygame.image.load("images/pacmanyellow.png")
@@ -70,11 +70,8 @@ class Player(pygame.sprite.Sprite):
         dx = 0
         dy = 0
         turned = False  # assume turned unless no turn
-        #print(directions)
         pressed = directions[self.number]
-        # if pressed == -1: #if we dont get any response from client
-        #     pressed = self.direction
-        
+
         if (self.rect.x / 50).is_integer() and (self.rect.y / 50).is_integer(): #check if position is directly in a tile
             prev_direction = self.direction
             prev_image = self.image

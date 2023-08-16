@@ -77,7 +77,7 @@ class World:
                     self.ghost_group.add(ghost)
 
     def export(self):
-        data = [[],[],[],[],self.winner] #[coin[], fruit[], ghost[], player[], winner]
+        data = [[],[],[],[],self.winner] # data = [coin[], fruit[], ghost[], player[], winner]
         for coin in self.coin_group.sprites():
             data[0].append((coin.x, coin.y))
         for fruit in self.fruit_group.sprites():
@@ -121,8 +121,8 @@ class World:
         
         self.winner = data[4]
         
-    def update(self, directions): #ohly should be used by server
-        #check for if the game has ended and there is a winner
+    def update(self, directions): # only should be used by server
+        # check for if the game has ended and there is a winner
         alive_players = 4
         for player in self.player_group.sprites():
             if player.dead:

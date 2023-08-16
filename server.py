@@ -53,14 +53,13 @@ def threaded_client(conn, player_num):
 
     while True:
         try:
-            data = pickle.loads(conn.recv(16384))
-            
+            data = pickle.loads(conn.recv(4096))
             if not data:
                 print("Disconnected")
                 break
             else:
                 player_moves[player_num] = data
-                reply = world.export()
+                reply = world.export() #sends the positions and other necessary display data to each client
 
             conn.send(pickle.dumps(reply))
 
