@@ -1,5 +1,5 @@
 # pacmanPVP
-PacmanPvP is a 1v1v1v1 multiplyer remake of the classic game Pacman
+PacmanPvP is a four player free-for-all multiplayer remake of the classic game Pacman
 
 ##
 Like classic Pacman, the player can collect points and eat ghosts. Each dot is worth 10 points. Collecting a fruit will give the player the ability to catch ghosts for 15 seconds. While the player has the power-up, the top right corner displays "INVINCIBILITY ON". Each ghost the player touches with invincibility will die and reward 100 points. Ghosts will respawn after a certain time to ensure the game stays interesting.
