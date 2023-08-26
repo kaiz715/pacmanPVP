@@ -9,7 +9,7 @@ class Network:
         self.addr = (self.server, self.port)
         self.player = self.connect()
 
-    def getPlayer(self):
+    def get_player(self):
         return self.player
 
     def connect(self):

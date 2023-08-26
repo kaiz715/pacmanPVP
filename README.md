@@ -8,3 +8,11 @@ The game starts when all four players load in. If an enemy ghost touches the pla
 
 ## Setup
 The server needs to be running first and always be running in the background. You need to adjust the IP address in the files depending on the IP address of the server you are running it on. After starting the server, start up instances of the client. Once all four players load in, the game starts. Have fun!!
+
+## Demo Pictures
+### Starting Position:
+![starting](demo_images/Starting.png)
+### In Game:
+![game](demo_images/game.png)
+### Win Screen:
+![win](demo_images/win.png)

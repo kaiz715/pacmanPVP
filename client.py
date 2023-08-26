@@ -11,7 +11,7 @@ pygame.display.set_caption("PacmanPVP")
 pygame.init()
 bauhaus = pygame.font.SysFont('Bauhaus 93', 30)
 bauhaus_big = pygame.font.SysFont('Bauhaus 93', 150)
-bauhaus_medium = pygame.font.SysFont('Bauhaus 93', 120)
+bauhaus_medium = pygame.font.SysFont('Bauhaus 93', 112)
 WHITE = (255,255,255)
 
 clientNumber = 0
@@ -31,7 +31,7 @@ def draw_text(text, font, color, x, y):
     img = font.render(text, True, color)
     screen.blit(img, (x,y))
 
-def redrawWindow(screen, world, player_num):
+def redraw_window(screen, world, player_num):
     screen.fill((0, 0, 0))
 
     #draw sprites
@@ -57,7 +57,7 @@ def main():
     network = Network()
 
     world = World(world_data)
-    player_data = network.getPlayer()
+    player_data = network.get_player()
     player_number = player_data[2]
 
     while run:
@@ -70,18 +70,18 @@ def main():
         keys = pygame.key.get_pressed() #get input
         pressed = -1
         if keys[pygame.K_LEFT]:
-            pressed = 1
+            pressed = LEFT
         elif keys[pygame.K_RIGHT]:
-            pressed = 2
+            pressed = RIGHT
         elif keys[pygame.K_UP]:
-            pressed = 3
+            pressed = UP
         elif keys[pygame.K_DOWN]:
-            pressed = 4
+            pressed = DOWN
 
         data = network.send(pressed) #get updated world from server
         world.load(data)
 
-        redrawWindow(screen, world, player_number)
+        redraw_window(screen, world, player_number)
 
 
 main()

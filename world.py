@@ -10,7 +10,6 @@ height = 1000
 WHITE = (255,255,255)
 
 tile_size = 50
-frame_rate = 45
 
 STOPPED = 0
 LEFT = 1
